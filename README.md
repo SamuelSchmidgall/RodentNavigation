@@ -1,9 +1,9 @@
-### RatNavigation
+# RatNavigation
 Hierarchical rat navigation reinforcement learning project
 
-##Papers to consider:
+## Papers to consider:
 
-#Vision:
+### Vision:
 (We definitely want some temporal abstraction e.g. recurrence, we also definitely want skip connections)
 
 Surround Modulation: A Bio-inspired Connectivity Structure for Convolutional Neural Networks
