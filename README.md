@@ -3,17 +3,17 @@ Hierarchical rat navigation reinforcement learning project
 
 ## Papers to consider:
 
-### Hierarchical Methods:
-HIERARCHICAL VISUOMOTOR CONTROL
-OF HUMANOIDS
-https://arxiv.org/pdf/1811.09656v1.pdf
-
-DEEP NEUROETHOLOGY OF A VIRTUAL RODENT
-https://arxiv.org/pdf/1911.09451.pdf
-
 ### General:
 Learning to Learn with Feedback and Local Plasticity
 https://openreview.net/pdf?id=HklfNQFL8H
+
+Structured and Deep Similarity Matching via Structured and Deep Hebbian Networks
+http://papers.nips.cc/paper/9674-structured-and-deep-similarity-matching-via-structured-and-deep-hebbian-networks.pdf
+
+Assessing the scalability of biologically-motivated deep learning algorithms
+and architectures
+https://papers.nips.cc/paper/8148-assessing-the-scalability-of-biologically-motivated-deep-learning-algorithms-and-architectures.pdf
+
 
 ### Vision:
 (We definitely want some temporal abstraction e.g. recurrence, we also definitely want skip connections)
@@ -33,5 +33,14 @@ https://www.biorxiv.org/content/10.1101/742189v1.full.pdf
 
 Deep Neural Networks and Visual Processing in the Rat 
 https://www.researchgate.net/publication/326547016
+
+
+### Hierarchical Methods:
+HIERARCHICAL VISUOMOTOR CONTROL
+OF HUMANOIDS
+https://arxiv.org/pdf/1811.09656v1.pdf
+
+DEEP NEUROETHOLOGY OF A VIRTUAL RODENT
+https://arxiv.org/pdf/1911.09451.pdf
 
 
