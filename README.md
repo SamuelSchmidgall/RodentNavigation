@@ -14,6 +14,10 @@ Assessing the scalability of biologically-motivated deep learning algorithms
 and architectures
 https://papers.nips.cc/paper/8148-assessing-the-scalability-of-biologically-motivated-deep-learning-algorithms-and-architectures.pdf
 
+### Neuroscience:
+
+A mesoscale connectome of the mouse brain
+https://www.nature.com/articles/nature13186
 
 ### Vision:
 (We definitely want some temporal abstraction e.g. recurrence, we also definitely want skip connections)
@@ -24,6 +28,9 @@ https://openreview.net/pdf?id=rkxcXmtUUS
 
 Neural networks grown and self-organized by noise
 http://papers.nips.cc/paper/by-source-2019-1100
+
+Densely connected convolutional networks
+https://arxiv.org/pdf/1608.06993.pdf
 
 Surround Modulation: A Bio-inspired Connectivity Structure for Convolutional Neural Networks
 http://papers.nips.cc/paper/9719-surround-modulation-a-bio-inspired-connectivity-structure-for-convolutional-neural-networks.pdf
