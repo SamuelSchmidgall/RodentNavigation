@@ -19,6 +19,9 @@ https://papers.nips.cc/paper/8148-assessing-the-scalability-of-biologically-moti
 A mesoscale connectome of the mouse brain
 https://www.nature.com/articles/nature13186
 
+Neocortical layer 6, a review
+https://www.frontiersin.org/articles/10.3389/fnana.2010.00013/full
+
 ### Vision:
 (We definitely want some temporal abstraction e.g. recurrence, we also definitely want skip connections)
 
