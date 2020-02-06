@@ -18,9 +18,12 @@ https://openreview.net/pdf?id=HklfNQFL8H
 ### Vision:
 (We definitely want some temporal abstraction e.g. recurrence, we also definitely want skip connections)
 
-**DEFINITELY read this one**
+**DEFINITELY read this one:**
 How well do deep neural networks trained on object recognition characterize the mouse visual system?
 https://openreview.net/pdf?id=rkxcXmtUUS
+
+Neural networks grown and self-organized by noise
+http://papers.nips.cc/paper/by-source-2019-1100
 
 Surround Modulation: A Bio-inspired Connectivity Structure for Convolutional Neural Networks
 http://papers.nips.cc/paper/9719-surround-modulation-a-bio-inspired-connectivity-structure-for-convolutional-neural-networks.pdf
