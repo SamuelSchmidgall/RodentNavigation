@@ -54,3 +54,10 @@ DEEP NEUROETHOLOGY OF A VIRTUAL RODENT
 https://arxiv.org/pdf/1911.09451.pdf
 
 
+
+## Things to keep in mind:
+Neuron densities of mouse brain
+https://www.frontiersin.org/articles/10.3389/fnana.2018.00083/full
+
+Modulating lower level policies more than just A_t, but the latent space
+
