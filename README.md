@@ -29,6 +29,10 @@ https://www.frontiersin.org/articles/10.3389/fnana.2010.00013/full
 How well do deep neural networks trained on object recognition characterize the mouse visual system?
 https://openreview.net/pdf?id=rkxcXmtUUS
 
+**and this one**
+Performance-optimized hierarchical models predict neural responses in higher visual cortex
+https://www.pnas.org/content/111/23/8619
+
 Neural networks grown and self-organized by noise
 http://papers.nips.cc/paper/by-source-2019-1100
 
