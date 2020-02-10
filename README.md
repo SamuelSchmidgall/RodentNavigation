@@ -46,6 +46,10 @@ https://www.pnas.org/content/111/23/8619
 Neural Map: Structured Memory for Deep Reinforcement Learning
 https://openreview.net/pdf?id=Bk9zbyZCZ
 
+**Also this, we couldn't use this, but it has the right idea...**
+Cognitive Mapping and Planning for Visual Navigation
+http://openaccess.thecvf.com/content_cvpr_2017/papers/Gupta_Cognitive_Mapping_and_CVPR_2017_paper.pdf
+
 Neural networks grown and self-organized by noise
 http://papers.nips.cc/paper/by-source-2019-1100
 
