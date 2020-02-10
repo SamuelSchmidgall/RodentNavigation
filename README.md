@@ -3,6 +3,9 @@ Hierarchical rat navigation reinforcement learning project
 
 ## Papers to consider:
 
+**Rat Maze Behavior**
+http://www.ratbehavior.org/RatsAndMazes.htm
+
 ### General:
 Learning to Learn with Feedback and Local Plasticity
 https://openreview.net/pdf?id=HklfNQFL8H
