@@ -49,16 +49,24 @@ Deep Neural Networks and Visual Processing in the Rat
 https://www.researchgate.net/publication/326547016
 
 
-
 ### Motor Cortex
+
+BioLSTMs
 https://papers.nips.cc/paper/6631-cortical-microcircuits-as-gated-recurrent-neural-networks.pdf
 
+
 ### Hierarchical Methods:
+My Idea:
+Skip-Connection modulating pre-trained hierarchical model
+
 Hierarchical Visuomotor Control of Humanoids
 https://arxiv.org/pdf/1811.09656v1.pdf
 
-DEEP NEUROETHOLOGY OF A VIRTUAL RODENT
+**Deep Neuroethology of a Virtual Rodent**
 https://arxiv.org/pdf/1911.09451.pdf
+
+Learning Multi-level Hierarchies with Hindsight
+https://arxiv.org/pdf/1712.00948.pdf
 
 
 
