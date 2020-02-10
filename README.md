@@ -7,8 +7,10 @@ We're going to create a large 3D maze generator, which places the rodent at one 
 
 ## Papers to consider:
 
+
 **Rat Maze Behavior**
 http://www.ratbehavior.org/RatsAndMazes.htm
+
 
 ### General:
 Learning to Learn with Feedback and Local Plasticity
@@ -39,6 +41,10 @@ https://openreview.net/pdf?id=rkxcXmtUUS
 **and this one**
 Performance-optimized hierarchical models predict neural responses in higher visual cortex
 https://www.pnas.org/content/111/23/8619
+
+**And this... I particularly like this one...**
+Neural Map: Structured Memory for Deep Reinforcement Learning
+https://openreview.net/pdf?id=Bk9zbyZCZ
 
 Neural networks grown and self-organized by noise
 http://papers.nips.cc/paper/by-source-2019-1100
@@ -81,7 +87,6 @@ https://openreview.net/pdf?id=ByeWogStDS
 ### RL
 Off-Policy Actor-Critic with Shared Experience Replay
 https://arxiv.org/pdf/1909.11583.pdf
-
 
 
 ## Things to keep in mind:
