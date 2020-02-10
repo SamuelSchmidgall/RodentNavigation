@@ -68,6 +68,13 @@ https://arxiv.org/pdf/1911.09451.pdf
 Learning Multi-level Hierarchies with Hindsight
 https://arxiv.org/pdf/1712.00948.pdf
 
+Sub-Policy Adaptation for Hierarchical Reinforcement Learning
+https://openreview.net/pdf?id=ByeWogStDS
+
+### RL
+Off-Policy Actor-Critic with Shared Experience Replay
+https://arxiv.org/pdf/1909.11583.pdf
+
 
 
 ## Things to keep in mind:
