@@ -82,6 +82,10 @@ https://arxiv.org/pdf/1811.09656v1.pdf
 **Deep Neuroethology of a Virtual Rodent**
 https://arxiv.org/pdf/1911.09451.pdf
 
+Hierarchical RL Using an Ensemble of Proprioceptive Periodic Policies
+(These guys solve a "maze" using a humanoid)
+https://openreview.net/pdf?id=SJz1x20cFQ
+
 Learning Multi-level Hierarchies with Hindsight
 https://arxiv.org/pdf/1712.00948.pdf
 
