@@ -4,6 +4,12 @@ Hierarchical rat navigation reinforcement learning project
 **Environment Description:**
 We're going to create a large 3D maze generator, which places the rodent at one corner of the maze and allows it to keep exploring until it has either - fallen or taken too long to solve. Once it fails, we place it back at the beginning of the maze (or place it upright?), and then once it has suceeded we wipe its neural memory and place it back at the beginning of a new maze. We can consider other tasks as well, ideally ones that will compliment this and enhance its neural mapping capabilities (like a simple obstacle avoidance task...).
 
+Final Decisions:
+**Visual Component Architecture:** 
+Brain-Like Object Recognition with High-Performing Shallow Recurrent ANNs
+https://papers.nips.cc/paper/9441-brain-like-object-recognition-with-high-performing-shallow-recurrent-anns
+
+
 ### Notes:
 - 'Sense of smell' providing loose directions toward maze goal or do a sparse reward for solving maze period...
 - Information Bottleneck visual inputs? -> https://arxiv.org/pdf/2002.01428v1.pdf
@@ -44,6 +50,7 @@ https://www.frontiersin.org/articles/10.3389/fnana.2010.00013/full
 **Yeah, this is what we are using undoubtably**
 Brain-Like Object Recognition with High-Performing Shallow Recurrent ANNs
 https://papers.nips.cc/paper/9441-brain-like-object-recognition-with-high-performing-shallow-recurrent-anns
+(code at: https://github.com/dicarlolab/cornet)
 
 http://www.brain-score.org/
 (We definitely want some temporal abstraction e.g. recurrence, we also definitely want skip connections)
