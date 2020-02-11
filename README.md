@@ -16,6 +16,11 @@ http://www.ratbehavior.org/RatsAndMazes.htm
 
 
 ### General:
+
+Bio-Plausible Gradient Approx: https://arxiv.org/pdf/1608.05343.pdf
+
+List of Bio-Plausible Gradient approxs: https://openreview.net/pdf?id=HJgPEXtIUS
+
 Learning to Learn with Feedback and Local Plasticity
 https://openreview.net/pdf?id=HklfNQFL8H
 
@@ -35,6 +40,12 @@ Neocortical layer 6, a review
 https://www.frontiersin.org/articles/10.3389/fnana.2010.00013/full
 
 ### Vision:
+
+**Yeah, this is what we are using undoubtably**
+Brain-Like Object Recognition with High-Performing Shallow Recurrent ANNs
+https://papers.nips.cc/paper/9441-brain-like-object-recognition-with-high-performing-shallow-recurrent-anns
+
+http://www.brain-score.org/
 (We definitely want some temporal abstraction e.g. recurrence, we also definitely want skip connections)
 
 **DEFINITELY read this one:**
@@ -52,6 +63,13 @@ https://openreview.net/pdf?id=Bk9zbyZCZ
 **Also this, we couldn't use this, but it has the right idea...**
 Cognitive Mapping and Planning for Visual Navigation
 http://openaccess.thecvf.com/content_cvpr_2017/papers/Gupta_Cognitive_Mapping_and_CVPR_2017_paper.pdf
+
+Significance of feedforward architectural differences between the ventral visual stream and DenseNet
+https://openreview.net/pdf?id=SkegNmFUIS
+
+How well do deep neural networks trained on object recognition characterize the mouse visual system?
+(Hint: They don't)
+https://openreview.net/pdf?id=rkxcXmtUUS
 
 Neural networks grown and self-organized by noise
 http://papers.nips.cc/paper/by-source-2019-1100
@@ -105,4 +123,11 @@ Neuron densities of mouse brain
 https://www.frontiersin.org/articles/10.3389/fnana.2018.00083/full
 
 Modulating lower level policies more than just A_t, but the latent space
+
+
+To read:
+
+http://papers.nips.cc/paper/8327-experience-replay-for-continual-learning.pdf
+
+
 
