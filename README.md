@@ -6,6 +6,7 @@ We're going to create a large 3D maze generator, which places the rodent at one 
 
 ### Notes:
 - 'Sense of smell' providing loose directions toward maze goal or do a sparse reward for solving maze period...
+- Information Bottleneck visual inputs? -> https://arxiv.org/pdf/2002.01428v1.pdf
 
 ## Papers to consider:
 
