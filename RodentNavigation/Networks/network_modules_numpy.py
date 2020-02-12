@@ -144,9 +144,9 @@ class NetworkModule:
             pre_eps = eps_index
             post_eps = eps_index + _val.size
             new_val = (_val.flatten() + eps[pre_eps:post_eps])
-            new_val.reshape(self.param_ref_list[_ref][0].shape)
+            new_val = new_val.reshape(self.param_ref_list[_ref][0].shape)
 
-            self.param_ref_list[_ref] = new_val, _val
+            self.param_ref_list[_ref] = new_val, _str_ref
             setattr(self, _str_ref, new_val)
         self.parameters = np.concatenate([_p[0].flatten() for _p in self.param_ref_list])
 
