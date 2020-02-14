@@ -6,7 +6,7 @@ from RodentNavigation.Networks.utils import *
 from RodentNavigation.Networks.network_modules_numpy import NetworkModule
 
 
-def compute_returns(seed, environment, network, num_eps_samples, num_env_rollouts=1):
+def compute_returns(seed, environment, network, num_eps_samples, num_env_rollouts=2):
     """
 
     :param seed:
@@ -54,7 +54,7 @@ def compute_returns(seed, environment, network, num_eps_samples, num_env_rollout
 
 
 class ParamSampler:
-    def __init__(self, sample_type, num_eps_samples, noise_std=0.005):
+    def __init__(self, sample_type, num_eps_samples, noise_std=0.01):
         """
         Evolutionary Strategies Optimizer
         :param sample_type: (str) type of noise sampling
@@ -83,7 +83,7 @@ class ParamSampler:
 
         sample = None
         if self.sample_type == "antithetic":
-            epsilon_half = rand_m.randn(num_eps_samples, params.size)
+            epsilon_half = rand_m.randn(num_eps_samples//2, params.size)
             sample = np.concatenate([epsilon_half, - epsilon_half]) * self.noise_std
         elif self.sample_type == "normal":
             sample = rand_m.randn(num_eps_samples, params.size) * self.noise_std
@@ -92,7 +92,8 @@ class ParamSampler:
 
 
 class SpinalNetworkES:
-    def __init__(self, input_size, output_size, upstream_dim, num_eps_samples=64, sample_type="antithetic"):
+    def __init__(self, input_size, output_size, upstream_dim=8,
+            action_noise_std=None, num_eps_samples=64, sample_type="antithetic"):
         """
         Spinal Network with lateral, residual upstream, residual downstream,
          recurrence and eligibility modulated weights for each set of connections
@@ -105,74 +106,79 @@ class SpinalNetworkES:
         self.params = list()
         self.input_size = input_size
         self.output_size = output_size
+        self.res_connectivity_type = "linear"
+        self.action_noise_std = action_noise_std
         self.input_upstream_dim = upstream_dim*2
         self.es_optim = ParamSampler(sample_type=sample_type, num_eps_samples=num_eps_samples)
 
+        self.ff_connectivity_type = "linear"  # eligibility
+        self.res_connectivity_type = "linear"  # eligibility
+
         recur_ff1_meta = {
             "clip":1, "activation": identity,
-            "input_size": input_size+self.input_upstream_dim, "output_size": 64}
+            "input_size": input_size + self.input_upstream_dim, "output_size": 32}
         self.recur_plastic_ff1 = \
-            NetworkModule("eligibility_recurrent", recur_ff1_meta)
+            NetworkModule(self.ff_connectivity_type, recur_ff1_meta)
         self.params.append(self.recur_plastic_ff1)
         recur_ff2_meta = {
-            "clip":1, "activation": identity, "input_size": 64, "output_size": 64}
+            "clip":1, "activation": identity, "input_size": 32, "output_size": 32}
         self.recur_plastic_ff2 = \
-            NetworkModule("eligibility_recurrent", recur_ff2_meta)
+            NetworkModule(self.ff_connectivity_type, recur_ff2_meta)
         self.params.append(self.recur_plastic_ff2)
         recur_ff3_meta = {
-            "clip":1, "activation": identity, "input_size": 64, "output_size": output_size}
+            "clip":1, "activation": identity, "input_size": 32, "output_size": output_size}
         self.recur_plastic_ff3 = \
-            NetworkModule("eligibility_recurrent", recur_ff3_meta)
+            NetworkModule(self.ff_connectivity_type, recur_ff3_meta)
         self.params.append(self.recur_plastic_ff3)
 
         resid_down_inp_2_meta = {
             "clip":1, "activation": identity,
-            "input_size": input_size+self.input_upstream_dim, "output_size": 64}
+            "input_size": input_size+self.input_upstream_dim, "output_size": 32}
         self.resid_downstream_inp_2 = \
-            NetworkModule("eligibility", resid_down_inp_2_meta)
+            NetworkModule(self.res_connectivity_type, resid_down_inp_2_meta)
         self.params.append(self.resid_downstream_inp_2)
         resid_down_inp_3_meta = {
             "clip":1, "activation": identity,
             "input_size": input_size+self.input_upstream_dim, "output_size": output_size}
         self.resid_downstream_inp_3 = \
-            NetworkModule("eligibility", resid_down_inp_3_meta)
+            NetworkModule(self.res_connectivity_type, resid_down_inp_3_meta)
         self.params.append(self.resid_downstream_inp_3)
         resid_down_1_3_meta = {
-            "clip":1, "activation": identity, "input_size": 64, "output_size": output_size}
+            "clip":1, "activation": identity, "input_size": 32, "output_size": output_size}
         self.resid_downstream_1_3 = \
-            NetworkModule("eligibility", resid_down_1_3_meta)
+            NetworkModule(self.res_connectivity_type, resid_down_1_3_meta)
         self.params.append(self.resid_downstream_1_3)
 
         resid_up_2_inp_meta = {
-            "clip":1, "activation": identity, "input_size": 64, "output_size": upstream_dim}
+            "clip":1, "activation": identity, "input_size": 32, "output_size": upstream_dim}
         self.resid_upstream_2_inp = \
-            NetworkModule("eligibility", resid_up_2_inp_meta)
+            NetworkModule(self.res_connectivity_type, resid_up_2_inp_meta)
         self.params.append(self.resid_upstream_2_inp)
         resid_up_3_inp_meta = {
             "clip":1, "activation": identity, "input_size": output_size, "output_size": upstream_dim}
         self.resid_upstream_3_inp = \
-            NetworkModule("eligibility", resid_up_3_inp_meta)
+            NetworkModule(self.res_connectivity_type, resid_up_3_inp_meta)
         self.params.append(self.resid_upstream_3_inp)
         resid_up_3_1_meta = {
-            "clip":1, "activation": identity, "input_size": output_size, "output_size": 64}
+            "clip":1, "activation": identity, "input_size": output_size, "output_size": 32}
         self.resid_upstream_3_1 = \
-            NetworkModule("eligibility", resid_up_3_1_meta)
+            NetworkModule(self.res_connectivity_type, resid_up_3_1_meta)
         self.params.append(self.resid_upstream_3_1)
 
         resid_lat_1_inp_meta = {
-            "clip":1, "activation": identity, "input_size": 64, "output_size": 64}
+            "clip":1, "activation": identity, "input_size": 32, "output_size": 32}
         self.resid_lat_1 = \
-            NetworkModule("eligibility", resid_lat_1_inp_meta)
+            NetworkModule(self.res_connectivity_type, resid_lat_1_inp_meta)
         self.params.append(self.resid_lat_1)
         resid_lat_2_inp_meta = {
-            "clip":1, "activation": identity, "input_size": 64, "output_size": 64}
+            "clip":1, "activation": identity, "input_size": 32, "output_size": output_size}
         self.resid_lat_2 = \
-            NetworkModule("eligibility", resid_lat_2_inp_meta)
+            NetworkModule(self.res_connectivity_type, resid_lat_2_inp_meta)
         self.params.append(self.resid_lat_2)
         resid_lat_3_inp_meta = {
             "clip":1, "activation": identity, "input_size": output_size, "output_size": output_size}
         self.resid_lat_3 = \
-            NetworkModule("eligibility", resid_lat_3_inp_meta)
+            NetworkModule(self.res_connectivity_type, resid_lat_3_inp_meta)
         self.params.append(self.resid_lat_3)
 
         self.layer_1_prev = np.zeros((1, recur_ff1_meta["output_size"]))
@@ -211,7 +217,7 @@ class SpinalNetworkES:
         sample = self.es_optim.sample(params, seed, num_eps_samples)
         return sample
 
-    def update_params(self, eps_sample):
+    def update_params(self, eps_sample, add_eps=True):
         """
         Update internal network parameters
         :param eps_sample: (ndarray) noise sample
@@ -222,7 +228,7 @@ class SpinalNetworkES:
             pre_param_itr = param_itr
             param_itr += self.params[_param].parameters.size
             param_sample = eps_sample[pre_param_itr:param_itr]
-            self.params[_param].update_params(param_sample)
+            self.params[_param].update_params(param_sample, add_eps=add_eps)
 
     def forward(self, x):
         """
@@ -257,12 +263,16 @@ class SpinalNetworkES:
         self.layer_2_prev = post_synaptic_ff2
         self.layer_3_prev = post_synaptic_ff3
 
+
+        if self.action_noise_std is not None:
+            x += np.random.randn(*x.shape)*self.action_noise_std
+
         return post_synaptic_ff3
 
 
 
 class EvolutionaryOptimizer:
-    def __init__(self, network, num_workers=2, epsilon_samples=64,
+    def __init__(self, network, num_workers=2, epsilon_samples=48,
             environment_id="Pendulum-v0", learning_rate=0.001):
         assert (epsilon_samples % num_workers == 0), "Epsilon sample size not divis num workers"
         self.network = network
@@ -310,12 +320,12 @@ class EvolutionaryOptimizer:
             total_timesteps += timesteps
             sample_returns += returns.tolist()
             samples += [self.network.generate_eps_samples(
-                seed, self.epsilon_samples//self.num_workers)]
+                seed[1], self.epsilon_samples//self.num_workers)]
 
         eps = np.concatenate(samples)
         returns = np.array(sample_returns)
 
-        print(np.sum(returns)/len(returns))
+        #print(np.sum(returns)/len(returns))
 
         # rank sort and convert rewards
         ret_len = len(returns)
@@ -337,16 +347,18 @@ class EvolutionaryOptimizer:
         change_mu = (1 / (self.epsilon_samples * (self.network.es_optim.noise_std ** 2))) * np.dot(eps.T, returns)
 
         ratio, theta = self.optimizer.update(-change_mu)
-        self.network.update_params(theta)
+        self.network.update_params(theta, add_eps=False)
+
+        avg_return_rec = sum(sample_returns) / len(sample_returns)
+        print(avg_return_rec)
 
 
 env_id = "Pendulum-v0"
 envrn = gym.make(env_id)
-upstream_bottleneck = 8
-spinal_net = SpinalNetworkES(envrn.observation_space.shape[0], envrn.action_space.shape[0], upstream_bottleneck)
-es_optim = EvolutionaryOptimizer(spinal_net, environment_id=env_id)
+spinal_net = SpinalNetworkES(envrn.observation_space.shape[0], envrn.action_space.shape[0], action_noise_std=0.001)
+es_optim = EvolutionaryOptimizer(spinal_net, environment_id=env_id, learning_rate=0.01)
 
-for _i in range(100):
+for _i in range(2000):
     es_optim.update(_i)
 
 

@@ -115,7 +115,7 @@ class NetworkModule:
         post_synaptic = None
         pre_synaptic = x.copy()
         if self.module_type == "linear":
-            post_synaptic = self.activation(np.matmul(self.layer_weight, x) + self.layer_bias)
+            post_synaptic = self.activation(np.matmul(x, self.layer_weight) + self.layer_bias)
 
         elif self.module_type == "eligibility":
             fixed_weights = np.matmul(x, self.layer_weight) + self.layer_bias
@@ -137,13 +137,16 @@ class NetworkModule:
     def params(self):
         return self.parameters
 
-    def update_params(self, eps):
+    def update_params(self, eps, add_eps=True):
         eps_index = 0
         for _ref in range(len(self.param_ref_list)):
             _val, _str_ref = self.param_ref_list[_ref]
             pre_eps = eps_index
-            post_eps = eps_index + _val.size
-            new_val = (_val.flatten() + eps[pre_eps:post_eps])
+            eps_index = eps_index + _val.size
+            if add_eps:
+                new_val = _val.flatten() + eps[pre_eps:eps_index]
+            else:
+                new_val = eps[pre_eps:eps_index]
             new_val = new_val.reshape(self.param_ref_list[_ref][0].shape)
 
             self.param_ref_list[_ref] = new_val, _str_ref
