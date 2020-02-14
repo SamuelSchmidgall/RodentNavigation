@@ -91,7 +91,139 @@ class ParamSampler:
         return sample
 
 
-class SpinalNetworkES:
+class ESNetwork:
+    def __init__(self, params, num_eps_samples=64, sample_type="antithetic"):
+        """
+
+        :param params:
+        :param num_eps_samples:
+        :param sample_type:
+        """
+        self.params = params
+        self.es_optim = ParamSampler(
+            sample_type=sample_type, num_eps_samples=num_eps_samples)
+
+    def parameters(self):
+        """
+        Return list of network parameters
+        :return: (ndarray) network parameters
+        """
+        params = list()
+        for _param in range(len(self.params)):
+            params.append(self.params[_param].params())
+        return np.concatenate(params, axis=0)
+
+    def generate_eps_samples(self, seed, num_eps_samples):
+        """
+        Generate noise samples for list of parameters
+        :param seed: (int) random number seed
+        :param num_eps_samples (int) number of noise samples to evaluate
+        :return: (ndarray) parameter noise
+        """
+        params = self.parameters()
+        sample = self.es_optim.sample(params, seed, num_eps_samples)
+        return sample
+
+    def update_params(self, eps_sample, add_eps=True):
+        """
+        Update internal network parameters
+        :param eps_sample: (ndarray) noise sample
+        :param add_eps (bool)
+        :return: None
+        """
+        param_itr = 0
+        for _param in range(len(self.params)):
+            pre_param_itr = param_itr
+            param_itr += self.params[_param].parameters.size
+            param_sample = eps_sample[pre_param_itr:param_itr]
+            self.params[_param].update_params(param_sample, add_eps=add_eps)
+
+
+class SpinalCPG(ESNetwork):
+    def __init__(self, input_size, output_size,
+            action_noise_std=None, num_eps_samples=64, sample_type="antithetic"):
+        """
+
+        :param input_size:
+        :param output_size:
+        :param action_noise_std:
+        :param num_eps_samples:
+        :param sample_type:
+        """
+        self.params = list()
+        self.input_size = input_size
+        self.output_size = output_size
+        self.connectivity_type = "linear"  # eligibility
+        self.action_noise_std = action_noise_std
+
+        """
+        <motor gear="120" joint="bthigh" name="bthigh"/>
+        <motor gear="90" joint="bshin" name="bshin"/>
+        <motor gear="60" joint="bfoot" name="bfoot"/>
+        <motor gear="120" joint="fthigh" name="fthigh"/>
+        <motor gear="60" joint="fshin" name="fshin"/>
+        <motor gear="30" joint="ffoot" name="ffoot"/>
+        """
+
+        inp_cpg_meta = {
+            "clip":1, "activation": identity,
+            "input_size": input_size, "output_size": 32}
+        self.inp_cpg = \
+            NetworkModule("linear", inp_cpg_meta)
+        self.params.append(self.inp_cpg)
+
+        cpg_osc1_meta = {
+            "clip":1, "activation": identity,
+            "input_size": 32, "output_size": 32}
+        self.cpg_osc_cluster1_1 = \
+            NetworkModule("linear", cpg_osc1_meta)
+        self.params.append(self.cpg_osc_cluster1_1)
+
+        cpg_osc2_meta = {
+            "clip":1, "activation": identity,
+            "input_size": 32, "output_size": 32}
+        self.cpg_osc_cluster1_2 = \
+            NetworkModule("linear", cpg_osc2_meta)
+        self.params.append(self.cpg_osc_cluster1_2)
+
+        cpg_leg1_meta = {
+            "clip":1, "activation": identity,
+            "input_size": 32, "output_size": output_size//2}
+        self.cpg_osc_cluster1_leg1 = \
+            NetworkModule("linear", cpg_leg1_meta)
+        self.params.append(self.cpg_osc_cluster1_leg1)
+
+        cpg_leg2_meta = {
+            "clip":1, "activation": identity,
+            "input_size": 32, "output_size": output_size//2}
+        self.cpg_osc_cluster1_leg2 = \
+            NetworkModule("linear", cpg_leg2_meta)
+        self.params.append(self.cpg_osc_cluster1_leg2)
+
+        super(SpinalCPG, self).__init__(
+            params=self.params, num_eps_samples=num_eps_samples, sample_type=sample_type)
+
+        self.layer_1_prev = np.zeros((1, 32))
+        self.layer_2_prev = np.zeros((1, 32))
+
+    def reset(self):
+        for _param in self.params:
+            _param.reset()
+        self.layer_1_prev = self.layer_1_prev * 0
+        self.layer_2_prev = self.layer_2_prev * 0
+
+    def forward(self, x):
+        cpg_latent = self.inp_cpg.forward(x)
+        cpg_latent1 = np.tanh(self.cpg_osc_cluster1_2.forward(self.layer_2_prev) + cpg_latent)
+        cpg_latent2 = np.tanh(self.cpg_osc_cluster1_1.forward(self.layer_1_prev) + cpg_latent)
+        self.layer_1_prev = deepcopy(cpg_latent1)
+        self.layer_2_prev = deepcopy(cpg_latent2)
+        leg1 = self.cpg_osc_cluster1_leg1.forward(cpg_latent1)
+        leg2 = self.cpg_osc_cluster1_leg2.forward(cpg_latent2)
+        return np.concatenate(leg1, leg2, axis=0)
+
+
+class SpinalNetworkES(ESNetwork):
     def __init__(self, input_size, output_size, upstream_dim=8,
             action_noise_std=None, num_eps_samples=64, sample_type="antithetic"):
         """
@@ -109,8 +241,6 @@ class SpinalNetworkES:
         self.res_connectivity_type = "linear"
         self.action_noise_std = action_noise_std
         self.input_upstream_dim = upstream_dim*2
-        self.es_optim = ParamSampler(sample_type=sample_type, num_eps_samples=num_eps_samples)
-
         self.ff_connectivity_type = "linear"  # eligibility
         self.res_connectivity_type = "linear"  # eligibility
 
@@ -181,6 +311,9 @@ class SpinalNetworkES:
             NetworkModule(self.res_connectivity_type, resid_lat_3_inp_meta)
         self.params.append(self.resid_lat_3)
 
+        super(SpinalNetworkES, self).__init__(
+            params=self.params, num_eps_samples=num_eps_samples, sample_type=sample_type)
+
         self.layer_1_prev = np.zeros((1, recur_ff1_meta["output_size"]))
         self.layer_2_prev = np.zeros((1, recur_ff2_meta["output_size"]))
         self.layer_3_prev = np.zeros((1, recur_ff3_meta["output_size"]))
@@ -195,40 +328,6 @@ class SpinalNetworkES:
         self.layer_1_prev = self.layer_1_prev * 0
         self.layer_2_prev = self.layer_2_prev * 0
         self.layer_3_prev = self.layer_3_prev * 0
-
-    def parameters(self):
-        """
-        Return list of network parameters
-        :return: (ndarray) network parameters
-        """
-        params = list()
-        for _param in range(len(self.params)):
-            params.append(self.params[_param].params())
-        return np.concatenate(params, axis=0)
-
-    def generate_eps_samples(self, seed, num_eps_samples):
-        """
-        Generate noise samples for list of parameters
-        :param seed: (int) random number seed
-        :param num_eps_samples (int) number of noise samples to evaluate
-        :return: (ndarray) parameter noise
-        """
-        params = self.parameters()
-        sample = self.es_optim.sample(params, seed, num_eps_samples)
-        return sample
-
-    def update_params(self, eps_sample, add_eps=True):
-        """
-        Update internal network parameters
-        :param eps_sample: (ndarray) noise sample
-        :return: None
-        """
-        param_itr = 0
-        for _param in range(len(self.params)):
-            pre_param_itr = param_itr
-            param_itr += self.params[_param].parameters.size
-            param_sample = eps_sample[pre_param_itr:param_itr]
-            self.params[_param].update_params(param_sample, add_eps=add_eps)
 
     def forward(self, x):
         """
