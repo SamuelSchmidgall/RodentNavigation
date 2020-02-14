@@ -137,4 +137,8 @@ To read:
 http://papers.nips.cc/paper/8327-experience-replay-for-continual-learning.pdf
 
 
+**Lateral**
+https://www.pnas.org/content/114/32/8637
+
+
 
