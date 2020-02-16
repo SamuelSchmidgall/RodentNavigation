@@ -1,3 +1,5 @@
+***https://arxiv.org/pdf/1604.03640.pdf
+
 # RatNavigation
 Hierarchical rat navigation reinforcement learning project
 
