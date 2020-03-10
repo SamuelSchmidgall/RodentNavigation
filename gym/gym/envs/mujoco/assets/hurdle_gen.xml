@@ -1,0 +1,203 @@
+<mujoco model="AllegroDog_RT">
+    <compiler angle="radian"/>
+
+    <default>
+        <joint  damping='1.3' frictionloss="0.3" stiffness="0.3"/> <!--  -->
+        <geom margin="0.01" rgba="0.8 0.6 0.4 1" conaffinity="0" contype="1" />
+        <motor gear="1"/>
+    </default>
+
+     <!--<option timestep='0.001' iterations="50" tolerance="1e-10" solver="Newton" jacobian="dense" cone="elliptic" gravity="0 0 -9.8"/>-->
+    <option timestep="0.005" integrator="RK4"/>
+    <!--<option integrator="RK4" iterations="50" solver="PGS" timestep="0.004"/>-->
+    <!--<option timestep="0.001"/>-->
+
+    <size nstack="1000000"/>
+
+
+    <asset>
+        <texture type="skybox" builtin="gradient" width="128" height="128" rgb1=".4 .6 .8"
+            rgb2="0 0 0"/>
+        <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2"
+            width="512" height="512"/>
+
+        <material name="MatPlane" reflectance="0.5" shininess="1" specular="1" texrepeat="60 60" texture="texplane"/>
+    </asset>
+    <worldbody>
+        <geom name='floor' pos='0 0 -0.55' friction="0.5 .1 .1" size='40 40 40' type='plane' material="MatPlane" condim="3" conaffinity="2"/>
+        <body name="Trunk" pos="0 0 0">
+            <site name="Trunk" size=".01" rgba="0 0 0 0"/>
+            <!-- <inertial pos="-0.00929 0.00181 -0.005294" quat="0.00116876 0.711471 0.000471744 0.702714" mass="9.25" diaginertia="0.309038 0.2653 0.0637522" /> -->
+            <geom name="Trunk" size="0.25 0.0925 0.075" type="box" mass="9.25" contype="1"/>
+            <freejoint name="root"/>
+            <body name="camera_base" pos="0.25 0 0.09">
+                <camera name="camera_head" pos="0.25 0 0.09" euler="0 0 0">
+                </camera>
+                <geom name="camera_b" size="0.01 0.01 0.01" rgba="1 0 0 1" type="box" contype="1"/>
+            </body>
+
+            <body name="FL1_LeftShoulder" pos="0.225 0.12 0">
+                <!-- <inertial pos="0 0 0" quat="0.87924 0.476379 0.000277455 -0.000629668" mass="0.934" diaginertia="0.005347 0.00512204 0.00112196" /> -->
+                <joint name="J_FL1_LeftShoulderTrans" pos="0 0 0" axis="1 0 0" limited="true" range="-0.3403 0.5149"/>
+                <geom size="0.0375 0.035 0.0375" type="box" mass="0.934" contype="1"/>
+                <body name="FL2_LeftArm" pos="0 0 -0.0375">
+                    <!-- <inertial pos="0 0 -0.125" quat="0.560325 0.431991 0.431806 0.559431" mass="1.252" diaginertia="0.01135 0.00961841 0.00228758" /> -->
+                    <joint name="J_FL2_LeftShoulderLong" pos="0 0 0" axis="0 1 0" limited="true" range="-1.4835 1.4835" />
+                    <geom size="0.03 0.0375 0.125" pos="0 0 -0.125" type="box" mass="1.252" contype="1"/>
+                    <body name="FL3_LeftForearm" pos="0 0 -0.25">
+                        <!-- <inertial pos="0 0 -0.1" quat="0.500232 0.499737 0.499754 0.500277" mass="0.4557" diaginertia="0.003266 0.003197 0.000125497" /> -->
+                        <joint name="J_FL3_LeftElbow" pos="0 0 0" axis="0 1 0" limited="true" range="-2.1817 -0.3" />
+                        <geom size="0.015 0.015 0.1" pos="0 0 -0.1" type="box" mass="0.4557" contype="1"/>
+                        <body name="Fo1_LeftHand" pos="0 0 -0.2225">
+                            <!--<inertial pos="0 0 0" mass="0.1806" diaginertia="0.0005207 0.0005187 2.116e-05" />-->
+                            <geom size="0.0225 0.02" quat="0.707107 0.707107 0 0" type="cylinder" mass="0.1806" contype="2"/>
+                            <site name="Fo1_LeftHand" size="0.0225 0.03 0.03" quat="0.707107 0.707107 0 0" type="box" rgba="0 0 0 0"/>
+                        </body>
+                    </body>
+                </body>
+            </body>
+            <body name="FR1_RightShoulder" pos="0.225 -0.12 0">
+                <!--<inertial pos="0 0 0" quat="0.476379 0.87924 -0.000629668 0.000277455" mass="0.934" diaginertia="0.005347 0.00512204 0.00112196" />-->
+                <joint name="J_FR1_RightShoulderTrans" pos="0 0 0" axis="1 0 0" limited="true" range="-0.5149 0.3403" />
+                <geom size="0.0375 0.035 0.0375" type="box" mass="0.934" contype="1"/>
+                <body name="FR2_RightArm" pos="0 0 -0.0375">
+                    <!--<inertial pos="0 0 -0.125" quat="0.431806 0.559431 0.560325 0.431991" mass="1.252" diaginertia="0.01135 0.00961841 0.00228758" />-->
+                    <joint name="J_FR2_RightShoulderLong" pos="0 0 0" axis="0 1 0" limited="true" range="-1.4835 1.4835" />
+                    <geom size="0.03 0.0375 0.125" pos="0 0 -0.125" type="box" mass="1.252" contype="1"/>
+                    <body name="FR3_RightForearm" pos="0 0 -0.25">
+                        <!--<inertial pos="0 0 -0.1" quat="0.499754 0.500277 0.500232 0.499737" mass="0.4557" diaginertia="0.003266 0.003197 0.000125497" />-->
+                        <joint name="J_FR3_RightElbow" pos="0 0 0" axis="0 1 0" limited="true" range="-2.1817 -0.3" />
+                        <geom size="0.015 0.015 0.1" pos="0 0 -0.1" type="box" mass="0.4557" contype="1"/>
+                        <body name="Fo2_RightHand" pos="0 0 -0.2225">
+                            <!--<inertial pos="0 0 0" mass="0.1806" diaginertia="0.0005207 0.0005187 2.116e-05" />-->
+                            <geom size="0.0225 0.02" quat="0.707107 0.707107 0 0" type="cylinder" contype="2" mass="0.1806" group="2"/>
+                            <site name="Fo2_RightHand" size="0.0225 0.03 0.03" quat="0.707107 0.707107 0 0" type="box" rgba="0 0 0 0" group="1"/>
+                        </body>
+                    </body>
+                </body>
+            </body>
+            <body name="RL1_LeftHip" pos="-0.225 0.12 0">
+                <!--<inertial pos="0 0 0" quat="0.87924 0.476379 0.000277455 -0.000629668" mass="0.934" diaginertia="0.005347 0.00512204 0.00112196" />-->
+                <joint name="J_RL1_LeftShoulderTrans" pos="0 0 0" axis="1 0 0" limited="true" range="-0.3403 0.5149" />
+                <geom size="0.0375 0.035 0.0375" type="box" mass="0.934" contype="1"/>
+                <body name="RL2_LeftThigh" pos="0 0 -0.0375">
+                    <!--<inertial pos="0 0 -0.125" quat="0.560325 0.431991 0.431806 0.559431" mass="1.252" diaginertia="0.01135 0.00961841 0.00228758" />-->
+                    <joint name="J_RL2_LeftShoulderLong" pos="0 0 0" axis="0 1 0" limited="true" range="-1.4835 1.4835" />
+                    <geom size="0.03 0.0375 0.125" pos="0 0 -0.125" type="box" mass="1.252" contype="1"/>
+                    <body name="RL3_LeftShin" pos="0 0 -0.25">
+                        <!--<inertial pos="0 0 -0.1" quat="0.500232 0.499737 0.499754 0.500277" mass="0.4557" diaginertia="0.003266 0.003197 0.000125497" />-->
+                        <joint name="J_RL3_LeftElbow" pos="0 0 0" axis="0 1 0" limited="true" range="0.3 2.1817"/>
+                        <geom size="0.015 0.015 0.1" pos="0 0 -0.1" type="box" mass="0.4557" contype="1"/>
+                        <body name="Fo3_LeftFoot" pos="0 0 -0.2225">
+                            <!--<inertial pos="0 0 0" mass="0.1806" diaginertia="0.0005207 0.0005187 2.116e-05" />-->
+                            <geom size="0.0225 0.02" quat="0.707107 0.707107 0 0" type="cylinder" contype="2" mass="0.1806"/>
+                            <site name="Fo3_LeftFoot" size="0.0225 0.03 0.03" quat="0.707107 0.707107 0 0" type="box" rgba="0 0 0 0"/>
+                        </body>
+                    </body>
+                </body>
+            </body>
+            <body name="RR1_RightHip" pos="-0.225 -0.12 0">
+                <!--<inertial pos="0 0 0" quat="0.476379 0.87924 -0.000629668 0.000277455" mass="0.934" diaginertia="0.005347 0.00512204 0.00112196" />-->
+                <joint name="J_RR1_RightShoulderTrans" pos="0 0 0" axis="1 0 0" limited="true" range="-0.5149 0.3403" />
+                <geom size="0.0375 0.035 0.0375" type="box" mass="0.934" contype="1"/>
+                <body name="RR2_RightThigh" pos="0 0 -0.0375">
+                    <!--<inertial pos="0 0 -0.125" quat="0.431806 0.559431 0.560325 0.431991" mass="1.252" diaginertia="0.01135 0.00961841 0.00228758" />-->
+                    <joint name="J_RR2_RightShoulderLong" pos="0 0 0" axis="0 1 0" limited="true" range="-1.4835 1.4835" />
+                    <geom size="0.03 0.0375 0.125" pos="0 0 -0.125" type="box" mass="1.252" contype="1"/>
+                    <body name="RR3_RightShin" pos="0 0 -0.25">
+                        <!--<inertial pos="0 0 -0.1" quat="0.499754 0.500277 0.500232 0.499737" mass="0.4557" diaginertia="0.003266 0.003197 0.000125497" />-->
+                        <joint name="J_RR3_RightElbow" pos="0 0 0" axis="0 1 0" limited="true" range="0.3 2.1817" />
+                        <geom size="0.015 0.015 0.1" pos="0 0 -0.1" type="box" mass="0.4557" contype="1"/>
+                        <body name="Fo4_RightFoot" pos="0 0 -0.2225">
+                            <!--<inertial pos="0 0 0" mass="0.1806" diaginertia="0.0005207 0.0005187 2.116e-05" />-->
+                            <geom size="0.0225 0.02" quat="0.707107 0.707107 0 0" type="cylinder" contype="2" mass="0.1806"/>
+                            <site name="Fo4_RightFoot" size="0.0225 0.03 0.03" quat="0.707107 0.707107 0 0" type="box" rgba="0 0 0 0"/>
+                        </body>
+                    </body>
+                </body>
+            </body>
+        </body>
+
+<!-- REPLACE ME -->
+
+    </worldbody>
+
+    <actuator>
+
+    <motor joint="J_FL1_LeftShoulderTrans" ctrlrange="-25 25" ctrllimited="true" name="pos_J_FL1_LeftShoulderTrans" forcelimited="true" forcerange="-25 25"/>
+    <motor joint="J_FL2_LeftShoulderLong" ctrlrange="-25 25" ctrllimited="true" name="pos_J_FL2_LeftShoulderLong" forcelimited="true" forcerange="-25 25"/>
+    <motor joint="J_FL3_LeftElbow" ctrlrange="-25 25" ctrllimited="true" name="pos_J_FL3_LeftElbow" forcelimited="true" forcerange="-25 25"/>
+    <motor joint="J_FR1_RightShoulderTrans" ctrlrange="-25 25" ctrllimited="true" name="pos_J_FR1_RightShoulderTrans" forcelimited="true" forcerange="-25 25"/>
+    <motor joint="J_FR2_RightShoulderLong" ctrlrange="-25 25" ctrllimited="true" name="pos_J_FR2_RightShoulderLong" forcelimited="true" forcerange="-25 25"/>
+    <motor joint="J_FR3_RightElbow" ctrlrange="-25 25" ctrllimited="true" name="pos_J_FR3_RightElbow" forcelimited="true" forcerange="-25 25"/>
+    <motor joint="J_RL1_LeftShoulderTrans" ctrlrange="-25 25" ctrllimited="true" name="pos_J_RL1_LeftShoulderTrans" forcelimited="true" forcerange="-25 25"/>
+    <motor joint="J_RL2_LeftShoulderLong" ctrlrange="-25 25" ctrllimited="true" name="pos_J_RL2_LeftShoulderLong" forcelimited="true" forcerange="-25 25"/>
+    <motor joint="J_RL3_LeftElbow" ctrlrange="-25 25" ctrllimited="true" name="pos_J_RL3_LeftElbow" forcelimited="true" forcerange="-25 25"/>
+    <motor joint="J_RR1_RightShoulderTrans" ctrlrange="-25 25" ctrllimited="true" name="pos_J_RR1_RightShoulderTrans" forcelimited="true" forcerange="-25 25"/>
+    <motor joint="J_RR2_RightShoulderLong" ctrlrange="-25 25" ctrllimited="true" name="pos_J_RR2_RightShoulderLong" forcelimited="true" forcerange="-25 25"/>
+    <motor joint="J_RR3_RightElbow" ctrlrange="-25 25" ctrllimited="true" name="pos_J_RR3_RightElbow" forcelimited="true" forcerange="-25 25"/>
+
+    </actuator>
+
+    <sensor>
+        <!-- Real Robot Sensor Info -->
+        <gyro name="trunk_gyro" site="Trunk"/>
+        <accelerometer name="trunk_accelerometer" site="Trunk"/>
+        <framequat name="trunk_orientation" objtype="geom" objname="Trunk"/>
+
+        <jointpos name='sensor_pos_J_FL1_LeftShoulderTrans'  joint='J_FL1_LeftShoulderTrans'/>
+        <jointpos name='sensor_pos_J_FL2_LeftShoulderLong'   joint='J_FL2_LeftShoulderLong'/>
+        <jointpos name='sensor_pos_J_FL3_LeftElbow'          joint='J_FL3_LeftElbow'/>
+        <jointpos name='sensor_pos_J_FR1_RightShoulderTrans' joint='J_FR1_RightShoulderTrans'/>
+        <jointpos name='sensor_pos_J_FR2_RightShoulderLong'  joint='J_FR2_RightShoulderLong'/>
+        <jointpos name='sensor_pos_J_FR3_RightElbow'         joint='J_FR3_RightElbow'/>
+        <jointpos name='sensor_pos_J_RL1_LeftShoulderTrans'  joint='J_RL1_LeftShoulderTrans'/>
+        <jointpos name='sensor_pos_J_RL2_LeftShoulderLong'   joint='J_RL2_LeftShoulderLong'/>
+        <jointpos name='sensor_pos_J_RL3_LeftElbow'          joint='J_RL3_LeftElbow'/>
+        <jointpos name='sensor_pos_J_RR1_RightShoulderTrans' joint='J_RR1_RightShoulderTrans'/>
+        <jointpos name='sensor_pos_J_RR2_RightShoulderLong'  joint='J_RR2_RightShoulderLong'/>
+        <jointpos name='sensor_pos_J_RR3_RightElbow'         joint='J_RR3_RightElbow'/>
+        <jointvel name='sensor_vel_J_FL1_LeftShoulderTrans'  joint='J_FL1_LeftShoulderTrans'/>
+        <jointvel name='sensor_vel_J_FL2_LeftShoulderLong'   joint='J_FL2_LeftShoulderLong'/>
+        <jointvel name='sensor_vel_J_FL3_LeftElbow'          joint='J_FL3_LeftElbow'/>
+        <jointvel name='sensor_vel_J_FR1_RightShoulderTrans' joint='J_FR1_RightShoulderTrans'/>
+        <jointvel name='sensor_vel_J_FR2_RightShoulderLong'  joint='J_FR2_RightShoulderLong'/>
+        <jointvel name='sensor_vel_J_FR3_RightElbow'         joint='J_FR3_RightElbow'/>
+        <jointvel name='sensor_vel_J_RL1_LeftShoulderTrans'  joint='J_RL1_LeftShoulderTrans'/>
+        <jointvel name='sensor_vel_J_RL2_LeftShoulderLong'   joint='J_RL2_LeftShoulderLong'/>
+        <jointvel name='sensor_vel_J_RL3_LeftElbow'          joint='J_RL3_LeftElbow'/>
+        <jointvel name='sensor_vel_J_RR1_RightShoulderTrans' joint='J_RR1_RightShoulderTrans'/>
+        <jointvel name='sensor_vel_J_RR2_RightShoulderLong'  joint='J_RR2_RightShoulderLong'/>
+        <jointvel name='sensor_vel_J_RR3_RightElbow'         joint='J_RR3_RightElbow'/>
+
+        <touch name="touch_Fo1_LeftHand" site="Fo1_LeftHand"/>
+        <touch name="touch_Fo2_RightHand" site="Fo2_RightHand"/>
+        <touch name="touch_Fo3_LeftFoot" site="Fo3_LeftFoot"/>
+        <touch name="touch_Fo4_RightFoot" site="Fo4_RightFoot"/>
+
+        <!-- Extra Info -->
+        <velocimeter name="trunk_velocimeter" site="Trunk"/>
+
+        <framepos name='sensor_pos_F_FL1_LeftShoulder'  objtype="body"    objname='FL1_LeftShoulder'/>
+        <framepos name='sensor_pos_F_FL2_LeftArm'       objtype="body"    objname='FL2_LeftArm'/>
+        <framepos name='sensor_pos_F_FL3_LeftForearm'   objtype="body"    objname='FL3_LeftForearm'/>
+        <framepos name='sensor_pos_F_Fo1_LeftHand'      objtype="body"    objname='Fo1_LeftHand'/>
+
+        <framepos name='sensor_pos_F_FR1_RightShoulder' objtype="body"    objname='FR1_RightShoulder'/>
+        <framepos name='sensor_pos_F_FR2_RightArm'      objtype="body"    objname='FR2_RightArm'/>
+        <framepos name='sensor_pos_F_FR3_RightForearm'  objtype="body"    objname='FR3_RightForearm'/>
+        <framepos name='sensor_pos_F_Fo2_RightHand'     objtype="body"    objname='Fo2_RightHand'/>
+
+        <framepos name='sensor_pos_F_RL1_LeftHip'       objtype="body"    objname='RL1_LeftHip'/>
+        <framepos name='sensor_pos_F_RL2_LeftThigh'     objtype="body"    objname='RL2_LeftThigh'/>
+        <framepos name='sensor_pos_F_RL3_LeftShin'      objtype="body"    objname='RL3_LeftShin'/>
+        <framepos name='sensor_pos_F_Fo3_LeftFoot'      objtype="body"    objname='Fo3_LeftFoot'/>
+
+        <framepos name='sensor_pos_F_RR1_RightHips'     objtype="body"    objname='RR1_RightHip'/>
+        <framepos name='sensor_pos_F_RR2_RightThigh'    objtype="body"    objname='RR2_RightThigh'/>
+        <framepos name='sensor_pos_F_RR3_RightShin'     objtype="body"    objname='RR3_RightShin'/>
+        <framepos name='sensor_pos_F_Fo4_RightFoot'     objtype="body"    objname='Fo4_RightFoot'/>
+    </sensor>
+</mujoco>
+
+
