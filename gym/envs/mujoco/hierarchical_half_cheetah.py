@@ -107,6 +107,8 @@ class HierarchicalHalfCheetahEnv(mujoco_env.MujocoEnv, utils.EzPickle):
               
             
         """
+        with open("hierarchical_half_cheetah.xml", "r") as f:
+            xml_content = f.read()
 
     def viewer_setup(self):
         self.viewer.cam.distance = self.model.stat.extent * 0.5
